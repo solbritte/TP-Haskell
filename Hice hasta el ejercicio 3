@@ -1,0 +1,35 @@
+import Data.Char
+
+esMin :: Char -> Bool
+esMin c = ord (c) >= ord 'a' && ord (c) <= ord 'z'
+
+
+letraANatural :: Char -> Integer
+letraANatural c = ord (c) - ord('a') --posicion de c entre 0 y 25
+
+NatAChar :: Int -> Char
+NatAChar k | k >= 0 && k <= 25 = chr ( (ord 'a') + k) --le doy un numero y me da su lugar en el abecedario
+
+desplazar :: Char -> Integer -> Char
+desplazar c 0 = c -- si n == 0, la letra no se desplaza
+desplazar c n | not(esMin(c)) = c -- cuando c no es minuscula
+              | n>0 = desplazarAdelante (c n)
+              | n<0 = desplazarAtras(c n)
+
+
+desplazarAdelante :: Char -> Integer -> Char
+desplazarAdelante  c n | letraANatural(c) + n <= 25 = NatAChar (letraANatural(c) +n)
+                       | letraANatural (c) + n > 25 = NatAChar (letraANatural(c) - 26 + n)
+
+desplazarAtras :: Char -> Integer -> Char
+desplazarAtras c n |  letraANatural(c) + n >= 0 = NatAChar (letraANatural(c) +n)
+                   |  letraANatural(c) + n < 0 = NatAChar (letraANatural(c) + n + 26)
+
+                --n posiciones menos
+       -- adelante en el abc rotando en caso de llegar al final
+       --chr te da la letra asociada al numero ascii que le paso
+
+cifrar :: String -> Int -> String
+cifrar [] _ = []
+cifrar (x:xs) n = (desplazar x n : cifrar xs n) 
+        
